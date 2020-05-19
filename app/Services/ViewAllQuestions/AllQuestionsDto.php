@@ -8,6 +8,7 @@ use App\Infrastructure\Shared\DataTransformer;
 
 class AllQuestionsDto implements DataTransformer
 {
+    /** @var Question[] */
     private $questions;
 
     public function __construct(Question ...$questions)
@@ -15,14 +16,29 @@ class AllQuestionsDto implements DataTransformer
         $this->questions = $questions;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function toArray(): array
     {
         return array_map(function (Question $question) {
             return [
                 'id' => $question->id,
                 'question' => $question->question,
-                'answer' => $question->answer,
+                'isAnswered' => $question->isAnswered ? 'yes' : 'no',
             ];
         }, $this->questions);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function fields(): array
+    {
+        return [
+            'id',
+            'question',
+            'isAnswered'
+        ];
     }
 }

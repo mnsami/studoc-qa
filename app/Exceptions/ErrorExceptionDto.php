@@ -24,4 +24,14 @@ final class ErrorExceptionDto implements DataTransformer
             'error' => $this->exception->getMessage()
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function fields(): array
+    {
+        return [
+            'error'
+        ];
+    }
 }

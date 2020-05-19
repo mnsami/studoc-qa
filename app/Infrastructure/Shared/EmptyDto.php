@@ -13,4 +13,12 @@ class EmptyDto implements DataTransformer
     {
         return [];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function fields(): array
+    {
+        return [];
+    }
 }
