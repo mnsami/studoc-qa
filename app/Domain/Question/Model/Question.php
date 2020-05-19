@@ -9,10 +9,4 @@ class Question extends Model
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     public $timestamps = false;
-
-    public const COLUMNS = [
-        'id',
-        'question',
-        'answer'
-    ];
 }
