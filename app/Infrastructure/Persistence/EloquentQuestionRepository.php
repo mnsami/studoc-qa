@@ -24,4 +24,14 @@ class EloquentQuestionRepository implements QuestionRepository
     {
         return Question::find($id);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function save(Question $question): Question
+    {
+        $question->save();
+
+        return $question;
+    }
 }

@@ -21,4 +21,12 @@ interface QuestionRepository
      * @return Question|null
      */
     public function findById(int $id): ?Question;
+
+    /**
+     * Add new question
+     *
+     * @param Question $question
+     * @return Question
+     */
+    public function save(Question $question): Question;
 }
