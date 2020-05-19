@@ -3,10 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Console\ConsoleStringFormatter;
-use App\Console\MenuCommand;
-use App\Services\AddNewQuestion\AddNewQuestionHandler;
+use App\Console\InteractiveConsoleCommand;
 
-class QAndA extends MenuCommand
+class QAndA extends InteractiveConsoleCommand
 {
     use ConsoleStringFormatter;
 
@@ -28,17 +27,17 @@ class QAndA extends MenuCommand
     private const COMMAND_TITLE = "Welcome to interactive command line based Q And A system";
 
     /** @const string */
-    private const CMD_ADD = 'Add';
+    private const CMD_ADD_NEW = 'new';
 
     /** @const string */
-    private const CMD_VIEW = 'View';
+    private const CMD_VIEW = 'view';
 
     /** @const string */
-    private const CMD_PRACTICE = 'Practice';
+    private const CMD_PRACTICE = 'practice';
 
     /** @const array */
     private const MAIN_MENU_CHOICES = [
-        self::CMD_ADD,
+        self::CMD_ADD_NEW,
         self::CMD_VIEW,
         self::CMD_PRACTICE,
         self::CMD_QUIT,
@@ -62,23 +61,24 @@ class QAndA extends MenuCommand
      */
     public function handle()
     {
-        $this->showMenu();
-
-        $command = strtolower(
-            $this->anticipate(
-                'Choose from the menu above:',
-                self::MAIN_MENU_CHOICES
-            )
-        );
-
         while ($this->running) {
+
+            $this->showMenu();
+
+            $command = strtolower(
+                $this->anticipate(
+                    'Choose from the menu above',
+                    self::MAIN_MENU_CHOICES
+                )
+            );
 
             switch ($command) {
                 case self::CMD_QUIT:
                     $this->quit();
                     break;
-                case self::CMD_ADD:
-                    $this->call('qanda:add-new-question');
+                case self::CMD_ADD_NEW:
+                    $this->handleSubCommand($this->call('qanda:add-new-question'));
+                    break;
             }
 
         }

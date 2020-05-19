@@ -3,11 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Console\ConsoleStringFormatter;
-use App\Console\MenuCommand;
+use App\Console\InteractiveConsoleCommand;
 use App\Services\AddNewQuestion\AddNewQuestionCommand;
 use App\Services\AddNewQuestion\AddNewQuestionHandler;
 
-class AddNewQuestion extends MenuCommand
+class AddNewQuestion extends InteractiveConsoleCommand
 {
     use ConsoleStringFormatter;
 
@@ -53,13 +53,17 @@ class AddNewQuestion extends MenuCommand
         while ($this->running) {
 
             $question = $this->promptQuestion();
-            $answer = $this->promptQuestionAnswer($question);
-
-            if ($this->shouldCancel($question) || $this->shouldCancel($answer)) {
+            if ($this->shouldCancel($question)) {
                 return self::CANCEL_EXIT_CODE;
+            } elseif ($this->shouldQuit($question)) {
+                $this->quit();
+                return self::TERMINATE_EXIT_CODE;
             }
 
-            if ($this->shouldQuit($question) || $this->shouldQuit($answer)) {
+            $answer = $this->promptQuestionAnswer($question);
+            if ($this->shouldCancel($answer)) {
+                return self::CANCEL_EXIT_CODE;
+            } elseif ($this->shouldQuit($answer)) {
                 $this->quit();
                 return self::TERMINATE_EXIT_CODE;
             }
@@ -113,7 +117,7 @@ class AddNewQuestion extends MenuCommand
             $this->writePaddedStringWithLeftRightBorders(' ', ' ')
         );
         $this->line(
-            $this->writePaddedStringWithLeftRightBorders('Add New Question', ' ')
+            $this->writePaddedStringWithLeftRightBorders('Add New Question details', ' ')
         );
         $this->line(
             $this->writePaddedStringWithLeftRightBorders(' ', ' ')

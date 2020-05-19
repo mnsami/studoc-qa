@@ -4,23 +4,27 @@ declare(strict_types=1);
 namespace App\Console;
 use Illuminate\Console\Command;
 
-abstract class MenuCommand extends Command
+abstract class InteractiveConsoleCommand extends Command
 {
     /** @var bool */
     protected $running;
 
     /** @const string */
     protected const CMD_QUIT = 'quit';
+    protected const CMD_QUIT_SHORT = 'q';
 
     /** @const string */
     protected const CMD_CANCEL = 'cancel';
+    protected const CMD_CANCEL_SHORT = 'c';
 
     protected const CANCEL_CHOICES = [
-        self::CMD_CANCEL
+        self::CMD_CANCEL,
+        self::CMD_CANCEL_SHORT
     ];
 
     protected const QUIT_CHOICES = [
-        self::CMD_QUIT
+        self::CMD_QUIT,
+        self::CMD_QUIT_SHORT
     ];
 
     /**
@@ -52,7 +56,7 @@ abstract class MenuCommand extends Command
     protected const CANCEL_EXIT_CODE = 200;
 
     /**
-     * MenuCommand constructor.
+     * InteractiveConsoleCommand constructor.
      */
     public function __construct()
     {
@@ -101,6 +105,15 @@ abstract class MenuCommand extends Command
      */
     protected function quit(): void
     {
-        $this->running = false;
+        if ($this->confirm("Type 'yes' to confirm you want to quit")) {
+            $this->running = false;
+        }
+    }
+
+    protected function handleSubCommand(int $exitCode)
+    {
+        if (self::TERMINATE_EXIT_CODE === $exitCode) {
+            $this->quit();
+        }
     }
 }
