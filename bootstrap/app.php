@@ -41,6 +41,11 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->bind(
+    \App\Domain\Question\Model\QuestionRepository::class,
+    \App\Infrastructure\Persistence\EloquentQuestionRepository::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
