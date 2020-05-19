@@ -1,9 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Repositories\Question;
+namespace App\Domain\Question\Model;
 
-use App\Question;
 use Illuminate\Database\Eloquent\Collection;
 
 interface QuestionRepository
