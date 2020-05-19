@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 
 abstract class InteractiveConsoleCommand extends Command
 {
+    use ConsoleStringFormatter;
+
     /** @var bool */
     protected $running;
 
@@ -105,7 +107,7 @@ abstract class InteractiveConsoleCommand extends Command
      */
     protected function quit(): void
     {
-        if ($this->confirm("Type 'yes' to confirm you want to quit")) {
+        if ($this->confirm("Are you sure you want to quit?")) {
             $this->running = false;
         }
     }

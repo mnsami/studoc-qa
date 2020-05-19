@@ -9,8 +9,6 @@ use App\Services\AddNewQuestion\AddNewQuestionHandler;
 
 class AddNewQuestion extends InteractiveConsoleCommand
 {
-    use ConsoleStringFormatter;
-
     /**
      * The name and signature of the console command.
      *

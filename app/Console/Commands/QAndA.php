@@ -7,8 +7,6 @@ use App\Console\InteractiveConsoleCommand;
 
 class QAndA extends InteractiveConsoleCommand
 {
-    use ConsoleStringFormatter;
-
     /**
      * The name and signature of the console command.
      *
@@ -28,12 +26,15 @@ class QAndA extends InteractiveConsoleCommand
 
     /** @const string */
     private const CMD_ADD_NEW = 'new';
+    private const CMD_ADD_NEW_SHORT = 'n';
 
     /** @const string */
     private const CMD_VIEW = 'view';
+    private const CMD_VIEW_SHORT = 'v';
 
     /** @const string */
     private const CMD_PRACTICE = 'practice';
+    private const CMD_PRACTICE_SHORT = 'p';
 
     /** @const array */
     private const MAIN_MENU_CHOICES = [
@@ -74,10 +75,16 @@ class QAndA extends InteractiveConsoleCommand
 
             switch ($command) {
                 case self::CMD_QUIT:
+                case self::CMD_QUIT_SHORT:
                     $this->quit();
                     break;
                 case self::CMD_ADD_NEW:
+                case self::CMD_ADD_NEW_SHORT:
                     $this->handleSubCommand($this->call('qanda:add-new-question'));
+                    break;
+                case self::CMD_VIEW:
+                case self::CMD_VIEW_SHORT:
+                    $this->handleSubCommand($this->call('qanda:view-all-questions'));
                     break;
             }
 
