@@ -2,17 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use App\Console\ConsoleStringFormatter;
+use App\Console\MenuCommand;
+use App\Services\AddNewQuestion\AddNewQuestionHandler;
 
-class QAndA extends Command
+class QAndA extends MenuCommand
 {
-    /**
-     * String padding lenght used to show
-     * test in cli
-     *
-     * @const integer
-     */
-    private const STRING_PADDING_LENGTH = 64;
+    use ConsoleStringFormatter;
 
     /**
      * The name and signature of the console command.
@@ -40,12 +36,6 @@ class QAndA extends Command
     /** @const string */
     private const CMD_PRACTICE = 'Practice';
 
-    /** @const string */
-    private const CMD_QUIT = 'Quit';
-
-    /** @const string */
-    private const CMD_CANCEL = 'Cancel';
-
     /** @const array */
     private const MAIN_MENU_CHOICES = [
         self::CMD_ADD,
@@ -58,11 +48,11 @@ class QAndA extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
      */
     public function __construct()
     {
         parent::__construct();
+        $this->running = true;
     }
 
     /**
@@ -73,54 +63,51 @@ class QAndA extends Command
     public function handle()
     {
         $this->showMenu();
-    }
 
-    protected function showMenu()
-    {
-        $this->line($this->getBorderedStringWithPadding("=", "="));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->info($this->getBorderedStringWithPadding(self::COMMAND_TITLE));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->line($this->getBorderedStringWithPadding("***", " "));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->line($this->getBorderedStringWithPadding("Menu"));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->line($this->getBorderedStringWithPadding("To add new question/answer, type 'new / n'"));
-        $this->line($this->getBorderedStringWithPadding("To view question/answer, type 'view / v'"));
-        $this->line($this->getBorderedStringWithPadding("To view progress, type 'progress / p'"));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->line($this->getBorderedStringWithPadding("***", " "));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->info($this->getBorderedStringWithPadding("To you want to go back at anytime, type 'cancel / c' "));
-        $this->info($this->getBorderedStringWithPadding("To you want to quit, type 'quit / q' "));
-        $this->line($this->getBorderedStringWithPadding(" ", " "));
-        $this->line($this->getBorderedStringWithPadding("=", "="));
-    }
+        $command = strtolower(
+            $this->anticipate(
+                'Choose from the menu above:',
+                self::MAIN_MENU_CHOICES
+            )
+        );
 
-    /**
-     * Get a RIGHT and LEFT padded string with
-     * left and right border.
-     *
-     * @param string $string String to output
-     * @param string $padding Optional. Specifies the string to use for padding. Default is whitespace
-     *
-     * @return string
-     */
-    private function getBorderedStringWithPadding($string, $padding = " ")
-    {
-        return "|" . $this->getPaddedStringForOutput($string, $padding) . "|";
+        while ($this->running) {
+
+            switch ($command) {
+                case self::CMD_QUIT:
+                    $this->quit();
+                    break;
+                case self::CMD_ADD:
+                    $this->call('qanda:add-new-question');
+            }
+
+        }
+
+        return self::SUCCESS_EXIT_CODE;
     }
 
     /**
-     * Get a RIGHT and LEFT padded string
-     *
-     * @param string $string String to output
-     * @param string $padding Optional. Specifies the string to use for padding. Default is whitespace
-     *
-     * @return string
+     * @inheritDoc
      */
-    private function getPaddedStringForOutput($string, $padding = " ")
+    protected function showMenu(): void
     {
-        return str_pad($string, self::STRING_PADDING_LENGTH, $padding, STR_PAD_BOTH);
+        $this->line($this->writePaddedStringWithLeftRightBorders("=", "="));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->info($this->writePaddedStringWithLeftRightBorders(self::COMMAND_TITLE));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders("***", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders("Menu"));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders("To add new question/answer, type 'new / n'"));
+        $this->line($this->writePaddedStringWithLeftRightBorders("To view question/answer, type 'view / v'"));
+        $this->line($this->writePaddedStringWithLeftRightBorders("To view progress, type 'progress / p'"));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders("***", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->info($this->writePaddedStringWithLeftRightBorders("To you want to go back at anytime, type 'cancel / c' "));
+        $this->info($this->writePaddedStringWithLeftRightBorders("To you want to quit, type 'quit / q' "));
+        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
+        $this->line($this->writePaddedStringWithLeftRightBorders("=", "="));
     }
 }
