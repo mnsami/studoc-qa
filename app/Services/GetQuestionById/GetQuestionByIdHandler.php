@@ -39,7 +39,7 @@ class GetQuestionByIdHandler implements CommandHandler
     {
         $this->assertItHandlesCommand($command);
 
-        $question = $this->questionRepository->findById((int) $command->questionId());
+        $question = $this->questionRepository->findById($command->questionId());
 
         return new GetQuestionDto($question);
     }

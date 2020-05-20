@@ -22,9 +22,13 @@ class EloquentQuestionRepository implements QuestionRepository
     /**
      * @inheritDoc
      */
-    public function questions(): Collection
+    public function questions(): array
     {
-        return $this->getTableQueryBuilder()->get();
+        $questionsCollection = $this->getTableQueryBuilder()->get()->all();
+
+        return array_map(function (\stdClass $question) {
+            return Question::createFromStdClass($question);
+        }, $questionsCollection);
     }
 
     /**

@@ -30,7 +30,7 @@ class AddNewQuestionHandler implements CommandHandler
     }
 
     /**
-     * @inheritDoc
+     * @param AddNewQuestionCommand $command
      * @throws SorryWrongCommand
      */
     public function handle(Command $command): DataTransformer

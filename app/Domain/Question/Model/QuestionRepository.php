@@ -11,9 +11,9 @@ interface QuestionRepository
     /**
      * Return all questions
      *
-     * @return Collection
+     * @return array
      */
-    public function questions(): Collection;
+    public function questions(): array;
 
     /**
      * Return a question by Id
