@@ -42,18 +42,18 @@ class Question extends Model
         $question = new Question();
 
         $question->id = $data->id;
-        $question->question = $data->question;
+        $question->body = $data->body;
         $question->answer = $data->answer;
         $question->is_answered = $data->is_answered;
 
         return $question;
     }
 
-    public static function createFromData(string $question, string $answer): Question
+    public static function createFromData(string $body, string $answer): Question
     {
         $questionModel = new Question();
 
-        $questionModel->question = $question;
+        $questionModel->body = $body;
         $questionModel->answer = $answer;
         $questionModel->is_answered = false;
 

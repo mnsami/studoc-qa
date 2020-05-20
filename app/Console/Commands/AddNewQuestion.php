@@ -75,10 +75,14 @@ class AddNewQuestion extends InteractiveConsoleCommand
     private function addNewQuestion(): void
     {
         $question = $this->promptQuestion();
-        $answer = $this->promptQuestionAnswer($question);
-        $this->addNewQuestionHandler->handle(
-            new AddNewQuestionCommand($question, $answer)
-        );
+        if (!$this->shouldCancel($question) && !$this->shouldQuit($question)) {
+            $answer = $this->promptQuestionAnswer($question);
+            if (!$this->shouldCancel($answer) && !$this->shouldQuit($answer)) {
+                $this->addNewQuestionHandler->handle(
+                    new AddNewQuestionCommand($question, $answer)
+                );
+            }
+        }
     }
 
     /**
@@ -87,13 +91,13 @@ class AddNewQuestion extends InteractiveConsoleCommand
      * @param string $question
      * @return string
      */
-    private function promptQuestionAnswer(string $question): string
+    private function promptQuestionAnswer(string $question): ?string
     {
         do {
             $answer = trim($this->ask("Add the model answer for question {$question}"));
         } while ($answer === '');
 
-        return $answer;
+        return null;
     }
 
     /**

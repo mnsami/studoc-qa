@@ -24,8 +24,8 @@ class AllQuestionsDto implements DataTransformer
         return array_map(function (Question $question) {
             return [
                 'id' => $question->id,
-                'question' => $question->question,
-                'isAnswered' => $question->isAnswered ? 'yes' : 'no',
+                'body' => $question->body,
+                'isAnswered' => $question->is_answered ? 'yes' : 'no',
             ];
         }, $this->questions);
     }
@@ -37,7 +37,7 @@ class AllQuestionsDto implements DataTransformer
     {
         return [
             'id',
-            'question',
+            'body',
             'isAnswered'
         ];
     }

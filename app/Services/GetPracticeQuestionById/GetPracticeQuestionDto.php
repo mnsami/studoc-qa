@@ -24,7 +24,7 @@ class GetPracticeQuestionDto implements DataTransformer
     {
         return [
             'id' => $this->question->id,
-            'question' => $this->question->question,
+            'body' => $this->question->body,
         ];
     }
 }

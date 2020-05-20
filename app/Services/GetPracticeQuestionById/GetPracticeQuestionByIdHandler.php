@@ -6,6 +6,7 @@ namespace App\Services\GetPracticeQuestionById;
 use App\Domain\Question\Model\AnswerRepository;
 use App\Domain\Question\Model\QuestionRepository;
 use App\Exceptions\SorryQuestionIsAlreadyAnswered;
+use App\Exceptions\SorryQuestionNotFound;
 use App\Exceptions\SorryWrongCommand;
 use App\Infrastructure\Shared\Command;
 use App\Infrastructure\Shared\CommandHandler;
@@ -46,6 +47,7 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
      * @return DataTransformer
      * @throws SorryWrongCommand
      * @throws SorryQuestionIsAlreadyAnswered
+     * @throws SorryQuestionNotFound
      */
     public function handle(Command $command): DataTransformer
     {
@@ -53,11 +55,14 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
 
         $questionId = $command->questionId();
         $question = $this->questionRepository->findById($questionId);
+        if ($question === null) {
+            throw new SorryQuestionNotFound("Question with Id {$questionId} not found.");
+        }
 
         $answer = $this->answerRepository->findByQuestionId($questionId);
         if ($answer !== null) {
             throw new SorryQuestionIsAlreadyAnswered(
-                'You already practiced this question: .' . $questionId
+                'You already practiced question with id: ' . $questionId
             );
         }
 

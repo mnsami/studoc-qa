@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\InteractiveConsoleCommand;
+use App\Exceptions\KernelException;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdCommand;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdHandler;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionDto;
@@ -12,14 +13,14 @@ use App\Services\ViewAllQuestions\AllQuestionsDto;
 use App\Services\ViewAllQuestions\ViewAllQuestionsCommand;
 use App\Services\ViewAllQuestions\ViewAllQuestionsHandler;
 
-class PracticeQuestion extends InteractiveConsoleCommand
+class PracticeQuestions extends InteractiveConsoleCommand
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'qanda:practice-question';
+    protected $signature = 'qanda:practice-questions';
 
     /**
      * The console command description.
@@ -37,7 +38,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
     private $viewAllQuestionsHandler;
 
     /** @var GetPracticeQuestionByIdHandler */
-    private $getQuestionByIdHandler;
+    private $getPracticeQuestionByIdHandler;
 
     /** @var SubmitQuestionAnswerHandler */
     private $submitQuestionAnswerHandler;
@@ -45,17 +46,17 @@ class PracticeQuestion extends InteractiveConsoleCommand
     /**
      * Create a new command instance.
      * @param ViewAllQuestionsHandler $viewAllQuestionsHandler
-     * @param GetPracticeQuestionByIdHandler $getQuestionByIdHandler
+     * @param GetPracticeQuestionByIdHandler $getPracticeQuestionByIdHandler
      * @param SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
      */
     public function __construct(
         ViewAllQuestionsHandler $viewAllQuestionsHandler,
-        GetPracticeQuestionByIdHandler $getQuestionByIdHandler,
+        GetPracticeQuestionByIdHandler $getPracticeQuestionByIdHandler,
         SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
     ) {
         parent::__construct();
         $this->viewAllQuestionsHandler = $viewAllQuestionsHandler;
-        $this->getQuestionByIdHandler = $getQuestionByIdHandler;
+        $this->getPracticeQuestionByIdHandler = $getPracticeQuestionByIdHandler;
         $this->submitQuestionAnswerHandler = $submitQuestionAnswerHandler;
     }
 
@@ -101,29 +102,42 @@ class PracticeQuestion extends InteractiveConsoleCommand
 
     protected function handlePracticeQuestion()
     {
-        $questionId = $this->ask('Select a question by entering its Id');
+        do {
+            $questionId = trim($this->ask('Select a question by entering its Id'));
+        } while ($questionId === '');
 
-        if (!$this->shouldQuit($questionId) || !$this->shouldCancel($questionId)) {
-            /** @var GetPracticeQuestionDto $questionDto */
-            $questionDto = $this->getQuestionByIdHandler
-                ->handle(
-                    new GetPracticeQuestionByIdCommand($questionId)
-                );
+        if (!$this->shouldQuit($questionId) && !$this->shouldCancel($questionId)) {
+            try {
+                /** @var GetPracticeQuestionDto $questionDto */
+                $questionDto = $this->getPracticeQuestionByIdHandler
+                    ->handle(
+                        new GetPracticeQuestionByIdCommand($questionId)
+                    );
 
-            $this->askQuestion($questionDto);
+                $this->askQuestion($questionDto);
+            } catch (KernelException $e) {
+                $this->error($e->getMessage());
+            }
         }
     }
 
     private function askQuestion(GetPracticeQuestionDto $questionDto)
     {
         $question = $questionDto->toArray();
-        $answer = $this->ask('Question: ' . $question['question']);
+        do {
+            $answer = trim($this->ask('Question: ' . $question['body']));
+        } while ($answer === '');
 
-        if (!$this->shouldQuit($answer) || !$this->shouldCancel($answer)) {
-            $this->submitQuestionAnswerHandler
-                ->handle(
-                    new SubmitQuestionAnswerCommand($answer, $question['id'])
-                );
+
+        if (!$this->shouldQuit($answer) && !$this->shouldCancel($answer)) {
+            try{
+                $this->submitQuestionAnswerHandler
+                    ->handle(
+                        new SubmitQuestionAnswerCommand($answer, $question['id'])
+                    );
+            } catch (KernelException $e) {
+                $this->error($e->getMessage());
+            }
         }
     }
 
@@ -139,7 +153,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
             $this->writePaddedStringWithLeftRightBorders(' ', ' ')
         );
         $this->info(
-            $this->writePaddedStringWithLeftRightBorders('Practice Arena', ' ')
+            $this->writePaddedStringWithLeftRightBorders('PracticeQuestions Arena', ' ')
         );
         $this->line(
             $this->writePaddedStringWithLeftRightBorders(' ', ' ')

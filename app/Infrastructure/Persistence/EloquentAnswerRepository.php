@@ -35,9 +35,9 @@ class EloquentAnswerRepository implements AnswerRepository
     {
         return $this->getTableQueryBuilder()
             ->insertGetId([
-                'question_id' => $answer->questionId,
+                'question_id' => $answer->question_id,
                 'answer' => $answer->answer,
-                'is_correct' => $answer->isCorrect
+                'is_correct' => $answer->is_correct
             ]);
     }
 }

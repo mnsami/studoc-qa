@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Console\ConsoleStringFormatter;
 use App\Console\InteractiveConsoleCommand;
 
 class QAndA extends InteractiveConsoleCommand
@@ -30,9 +29,9 @@ class QAndA extends InteractiveConsoleCommand
     private const CMD_ADD_CHOICE = 'Add New Question';
 
     /** @const string */
-    private const CMD_VIEW = 'view';
-    private const CMD_VIEW_SHORT = 'v';
-    private const CMD_VIEW_CHOICE = 'View all available questions.';
+    private const CMD_PRACTICE = 'practice';
+    private const CMD_PRACTICE_SHORT = 'p';
+    private const CMD_PRACTICE_CHOICE = 'Practice questions';
 
     /** @const string */
     private const CMD_PROGRESS = 'progress';
@@ -42,7 +41,7 @@ class QAndA extends InteractiveConsoleCommand
     /** @const array */
     private const MAIN_MENU_CHOICES = [
         self::CMD_ADD_NEW => self::CMD_ADD_CHOICE,
-        self::CMD_VIEW => self::CMD_VIEW_CHOICE,
+        self::CMD_PRACTICE => self::CMD_PRACTICE_CHOICE,
         self::CMD_PROGRESS => self::CMD_PROGRESS_CHOICE
     ];
 
@@ -79,9 +78,9 @@ class QAndA extends InteractiveConsoleCommand
                 case self::CMD_ADD_NEW_SHORT:
                     $this->handleSubCommandExitCodes($this->call('qanda:add-new-question'));
                     break;
-                case self::CMD_VIEW:
-                case self::CMD_VIEW_SHORT:
-                    $this->handleSubCommandExitCodes($this->call('qanda:view-all-questions'));
+                case self::CMD_PRACTICE:
+                case self::CMD_PRACTICE_SHORT:
+                    $this->handleSubCommandExitCodes($this->call('qanda:practice-questions'));
                     break;
                 default:
                     $this->handleCommonInputChoice($choice);

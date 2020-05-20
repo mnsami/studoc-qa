@@ -51,13 +51,23 @@ class EloquentQuestionRepository implements QuestionRepository
      */
     public function save(Question $question): void
     {
-        $this->getTableQueryBuilder()
-            ->insert(
-                [
-                    'question' => $question->question,
+        if ($question->id === null) {
+            $this->getTableQueryBuilder()
+                ->insert(
+                    [
+                        'body' => $question->body,
+                        'answer' => $question->answer,
+                        'is_answered' => $question->is_answered
+                    ]
+                );
+        } else {
+            $this->getTableQueryBuilder()
+                ->where('id', $question->id)
+                ->update([
+                    'body' => $question->body,
                     'answer' => $question->answer,
                     'is_answered' => $question->is_answered
-                ]
-            );
+                ]);
+        }
     }
 }

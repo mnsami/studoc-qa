@@ -176,11 +176,14 @@ abstract class InteractiveConsoleCommand extends Command
                     $this->quit();
                     return self::QUIT_EXIT_CODE;
                 }
+                return self::CANCEL_EXIT_CODE;
                 break;
             case self::CMD_CANCEL:
             case self::CMD_CANCEL_SHORT:
                 return self::CANCEL_EXIT_CODE;
                 break;
         }
+
+        return self::CANCEL_EXIT_CODE;
     }
 }
