@@ -31,6 +31,7 @@ class AddNewQuestionHandler implements CommandHandler
 
     /**
      * @inheritDoc
+     * @throws SorryWrongCommand
      */
     public function handle(Command $command): DataTransformer
     {
@@ -47,6 +48,7 @@ class AddNewQuestionHandler implements CommandHandler
 
     /**
      * @inheritDoc
+     * @throws SorryWrongCommand
      */
     public function assertItHandlesCommand(Command $command)
     {
