@@ -9,11 +9,4 @@ interface DataTransformer
      * @return array
      */
     public function toArray(): array;
-
-    /**
-     * Return fields as keys
-     *
-     * @return array
-     */
-    public function fields(): array;
 }
