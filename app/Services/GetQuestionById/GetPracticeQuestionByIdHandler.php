@@ -3,22 +3,32 @@ declare(strict_types=1);
 
 namespace App\Services\GetQuestionById;
 
+use App\Domain\Question\Model\AnswerRepository;
 use App\Domain\Question\Model\QuestionRepository;
-use App\Exceptions\ErrorExceptionDto;
 use App\Exceptions\SorryQuestionIsAlreadyAnswered;
 use App\Exceptions\SorryWrongCommand;
 use App\Infrastructure\Shared\Command;
 use App\Infrastructure\Shared\CommandHandler;
 use App\Infrastructure\Shared\DataTransformer;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GetPracticeQuestionByIdHandler implements CommandHandler
 {
     /** @var QuestionRepository */
     private $questionRepository;
 
-    public function __construct(QuestionRepository $questionRepository)
-    {
+    /** @var AnswerRepository */
+    private $answerRepository;
+
+    /**
+     * GetPracticeQuestionByIdHandler constructor.
+     * @param AnswerRepository $answerRepository
+     * @param QuestionRepository $questionRepository
+     */
+    public function __construct(
+        AnswerRepository $answerRepository,
+        QuestionRepository $questionRepository
+    ) {
+        $this->answerRepository = $answerRepository;
         $this->questionRepository = $questionRepository;
     }
 
@@ -41,10 +51,13 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
     {
         $this->assertItHandlesCommand($command);
 
-        $question = $this->questionRepository->findById($command->questionId());
-        if ($question->is_answered === true) {
+        $questionId = $command->questionId();
+        $question = $this->questionRepository->findById($questionId);
+
+        $answer = $this->answerRepository->findByQuestionId($questionId);
+        if ($answer !== null) {
             throw new SorryQuestionIsAlreadyAnswered(
-                'Question with id ' . $command->questionId() . 'is already answered.'
+                'You already practiced this question: .' . $questionId
             );
         }
 
