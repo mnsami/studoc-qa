@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Shared;
 
+use App\Exceptions\SorryWrongCommand;
+
 interface CommandHandler
 {
     /**

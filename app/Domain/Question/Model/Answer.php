@@ -4,14 +4,14 @@ namespace App\Domain\Question\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class Answer extends Model
 {
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
     public $timestamps = false;
 
-    public function answer()
+    public function question()
     {
-        return $this->hasOne('App\Domain\Question\Model\Answer');
+        return $this->belongsTo('App\Domain\Question\Model\Question');
     }
 }
