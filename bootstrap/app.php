@@ -46,6 +46,11 @@ $app->bind(
     \App\Infrastructure\Persistence\EloquentQuestionRepository::class
 );
 
+$app->bind(
+    \App\Domain\Question\Model\AnswerRepository::class,
+    \App\Infrastructure\Persistence\EloquentAnswerRepository::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

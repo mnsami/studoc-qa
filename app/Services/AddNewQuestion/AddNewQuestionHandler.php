@@ -37,11 +37,12 @@ class AddNewQuestionHandler implements CommandHandler
     {
         $this->assertItHandlesCommand($command);
 
-        $question = new Question();
-        $question->question = $command->question();
-        $question->answer = $command->answer();
-
-        $question = $this->questionRepository->save($question);
+        $this->questionRepository->save(
+            Question::createFromData(
+                $command->question(),
+                $command->answer()
+            )
+        );
 
         return new EmptyDto();
     }

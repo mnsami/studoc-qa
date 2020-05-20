@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Question\Model;
 
-use Illuminate\Database\Eloquent\Collection;
+
+use Illuminate\Support\Collection;
 
 interface QuestionRepository
 {
@@ -26,7 +27,6 @@ interface QuestionRepository
      * Add new question
      *
      * @param Question $question
-     * @return Question
      */
-    public function save(Question $question): Question;
+    public function save(Question $question): void;
 }
