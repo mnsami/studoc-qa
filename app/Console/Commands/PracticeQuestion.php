@@ -6,6 +6,8 @@ use App\Console\InteractiveConsoleCommand;
 use App\Services\GetQuestionById\GetQuestionByIdCommand;
 use App\Services\GetQuestionById\GetQuestionByIdHandler;
 use App\Services\GetQuestionById\GetQuestionDto;
+use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
+use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerHandler;
 use App\Services\ViewAllQuestions\AllQuestionsDto;
 use App\Services\ViewAllQuestions\ViewAllQuestionsCommand;
 use App\Services\ViewAllQuestions\ViewAllQuestionsHandler;
@@ -37,18 +39,24 @@ class PracticeQuestion extends InteractiveConsoleCommand
     /** @var GetQuestionByIdHandler */
     private $getQuestionByIdHandler;
 
+    /** @var SubmitQuestionAnswerHandler */
+    private $submitQuestionAnswerHandler;
+
     /**
      * Create a new command instance.
      * @param ViewAllQuestionsHandler $viewAllQuestionsHandler
      * @param GetQuestionByIdHandler $getQuestionByIdHandler
+     * @param SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
      */
     public function __construct(
         ViewAllQuestionsHandler $viewAllQuestionsHandler,
-        GetQuestionByIdHandler $getQuestionByIdHandler
+        GetQuestionByIdHandler $getQuestionByIdHandler,
+        SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
     ) {
         parent::__construct();
         $this->viewAllQuestionsHandler = $viewAllQuestionsHandler;
         $this->getQuestionByIdHandler = $getQuestionByIdHandler;
+        $this->submitQuestionAnswerHandler = $submitQuestionAnswerHandler;
     }
 
     /**
@@ -110,6 +118,13 @@ class PracticeQuestion extends InteractiveConsoleCommand
     {
         $question = $questionDto->toArray();
         $answer = $this->ask('Question: ' . $question['question']);
+
+        if (!$this->shouldQuit($answer) || !$this->shouldCancel($answer)) {
+            $this->submitQuestionAnswerHandler
+                ->handle(
+                    new SubmitQuestionAnswerCommand($answer, $question['id'])
+                );
+        }
     }
 
     /**

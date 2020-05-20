@@ -68,10 +68,13 @@ class SubmitQuestionAnswerHandler implements CommandHandler
         }
 
         $answer = new Answer();
-        $answer->questionId = $questionId;
+        $answer->question_id = $questionId;
         $answer->answer = $userAnswer;
-        $answer->isCorrect = $userAnswer === $question->answer;
+        $answer->is_correct = $userAnswer === $question->answer;
 
+        $question->is_answered = true;
+
+        $this->questionRepository->save($question);
         $this->answerRepository->save($answer);
 
         return new EmptyDto();
