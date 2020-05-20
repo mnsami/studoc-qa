@@ -17,10 +17,10 @@ interface QuestionRepository
     /**
      * Return a question by Id
      *
-     * @param int $id
+     * @param string $id
      * @return Question|null
      */
-    public function findById(int $id): ?Question;
+    public function findById(string $id): ?Question;
 
     /**
      * Add new question
