@@ -27,22 +27,23 @@ class QAndA extends InteractiveConsoleCommand
     /** @const string */
     private const CMD_ADD_NEW = 'new';
     private const CMD_ADD_NEW_SHORT = 'n';
+    private const CMD_ADD_CHOICE = 'Add New Question';
 
     /** @const string */
     private const CMD_VIEW = 'view';
     private const CMD_VIEW_SHORT = 'v';
+    private const CMD_VIEW_CHOICE = 'View all available questions.';
 
     /** @const string */
-    private const CMD_PRACTICE = 'practice';
-    private const CMD_PRACTICE_SHORT = 'p';
+    private const CMD_PROGRESS = 'progress';
+    private const CMD_PROGRESS_SHORT = 'g';
+    private const CMD_PROGRESS_CHOICE = 'Show your progress.';
 
     /** @const array */
     private const MAIN_MENU_CHOICES = [
-        self::CMD_ADD_NEW,
-        self::CMD_VIEW,
-        self::CMD_PRACTICE,
-        self::CMD_QUIT,
-        self::CMD_CANCEL
+        self::CMD_ADD_NEW => self::CMD_ADD_CHOICE,
+        self::CMD_VIEW => self::CMD_VIEW_CHOICE,
+        self::CMD_PROGRESS => self::CMD_PROGRESS_CHOICE
     ];
 
     /**
@@ -66,31 +67,34 @@ class QAndA extends InteractiveConsoleCommand
 
             $this->showMenu();
 
-            $command = strtolower(
-                $this->anticipate(
-                    'Choose from the menu above',
-                    self::MAIN_MENU_CHOICES
+            $choice = strtolower(
+                $this->choice(
+                    'Choose from the menu below',
+                    $this->choices()
                 )
             );
 
-            switch ($command) {
-                case self::CMD_QUIT:
-                case self::CMD_QUIT_SHORT:
-                    $this->quit();
-                    break;
+            switch ($choice) {
                 case self::CMD_ADD_NEW:
                 case self::CMD_ADD_NEW_SHORT:
-                    $this->handleSubCommand($this->call('qanda:add-new-question'));
+                    $this->handleSubCommandExitCodes($this->call('qanda:add-new-question'));
                     break;
                 case self::CMD_VIEW:
                 case self::CMD_VIEW_SHORT:
-                    $this->handleSubCommand($this->call('qanda:view-all-questions'));
+                    $this->handleSubCommandExitCodes($this->call('qanda:view-all-questions'));
+                    break;
+                default:
+                    $this->handleCommonInputChoice($choice);
                     break;
             }
-
         }
 
         return self::SUCCESS_EXIT_CODE;
+    }
+
+    protected function commandChoices(): array
+    {
+        return self::MAIN_MENU_CHOICES;
     }
 
     /**
@@ -103,17 +107,6 @@ class QAndA extends InteractiveConsoleCommand
         $this->info($this->writePaddedStringWithLeftRightBorders(self::COMMAND_TITLE));
         $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
         $this->line($this->writePaddedStringWithLeftRightBorders("***", " "));
-        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
-        $this->line($this->writePaddedStringWithLeftRightBorders("Menu"));
-        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
-        $this->line($this->writePaddedStringWithLeftRightBorders("To add new question/answer, type 'new / n'"));
-        $this->line($this->writePaddedStringWithLeftRightBorders("To view question/answer, type 'view / v'"));
-        $this->line($this->writePaddedStringWithLeftRightBorders("To view progress, type 'progress / p'"));
-        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
-        $this->line($this->writePaddedStringWithLeftRightBorders("***", " "));
-        $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
-        $this->info($this->writePaddedStringWithLeftRightBorders("To you want to go back at anytime, type 'cancel / c' "));
-        $this->info($this->writePaddedStringWithLeftRightBorders("To you want to quit, type 'quit / q' "));
         $this->line($this->writePaddedStringWithLeftRightBorders(" ", " "));
         $this->line($this->writePaddedStringWithLeftRightBorders("=", "="));
     }

@@ -26,6 +26,11 @@ class AddNewQuestion extends InteractiveConsoleCommand
     /** @var AddNewQuestionHandler */
     private $addNewQuestionHandler;
 
+    /** @const string */
+    private const CMD_ADD_NEW = 'new';
+    private const CMD_ADD_NEW_SHORT = 'n';
+    private const CMD_ADD_CHOICE = 'Add New Question';
+
     /**
      * Create a new command instance.
      *
@@ -36,7 +41,6 @@ class AddNewQuestion extends InteractiveConsoleCommand
     ) {
         parent::__construct();
         $this->addNewQuestionHandler = $addNewQuestionHandler;
-        $this->running = true;
     }
 
     /**
@@ -46,32 +50,35 @@ class AddNewQuestion extends InteractiveConsoleCommand
      */
     public function handle()
     {
-        $this->showMenu();
+        $this->running = true;
 
         while ($this->running) {
 
-            $question = $this->promptQuestion();
-            if ($this->shouldCancel($question)) {
-                return self::CANCEL_EXIT_CODE;
-            } elseif ($this->shouldQuit($question)) {
-                $this->quit();
-                return self::TERMINATE_EXIT_CODE;
-            }
+            $this->showMenu();
 
-            $answer = $this->promptQuestionAnswer($question);
-            if ($this->shouldCancel($answer)) {
-                return self::CANCEL_EXIT_CODE;
-            } elseif ($this->shouldQuit($answer)) {
-                $this->quit();
-                return self::TERMINATE_EXIT_CODE;
-            }
+            $choice = $this->choice('Choose from menu below', $this->choices());
 
-            $this->addNewQuestionHandler->handle(
-                new AddNewQuestionCommand($question, $answer)
-            );
+            switch ($choice) {
+                case self::CMD_ADD_NEW:
+                case self::CMD_ADD_NEW_SHORT:
+                    $this->addNewQuestion();
+                    break;
+                default:
+                    return $this->handleCommonInputChoice($choice);
+                    break;
+            }
         }
 
         return self::SUCCESS_EXIT_CODE;
+    }
+
+    private function addNewQuestion(): void
+    {
+        $question = $this->promptQuestion();
+        $answer = $this->promptQuestionAnswer($question);
+        $this->addNewQuestionHandler->handle(
+            new AddNewQuestionCommand($question, $answer)
+        );
     }
 
     /**
@@ -123,5 +130,15 @@ class AddNewQuestion extends InteractiveConsoleCommand
         $this->line(
             $this->writePaddedStringWithLeftRightBorders('-', '-')
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function commandChoices(): array
+    {
+        return [
+            self::CMD_ADD_NEW => self::CMD_ADD_CHOICE
+        ];
     }
 }
