@@ -20,7 +20,7 @@ class EloquentQuestionRepository implements QuestionRepository
     /**
      * @inheritDoc
      */
-    public function findById(int $id): ?Question
+    public function findById(string $id): ?Question
     {
         return Question::findOrFail($id);
     }
