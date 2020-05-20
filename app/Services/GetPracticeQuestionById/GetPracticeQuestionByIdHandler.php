@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Services\GetQuestionById;
+namespace App\Services\GetPracticeQuestionById;
 
 use App\Domain\Question\Model\AnswerRepository;
 use App\Domain\Question\Model\QuestionRepository;

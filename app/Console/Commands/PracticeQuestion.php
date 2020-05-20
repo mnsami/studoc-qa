@@ -3,9 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Console\InteractiveConsoleCommand;
-use App\Services\GetQuestionById\GetPracticeQuestionByIdCommand;
-use App\Services\GetQuestionById\GetPracticeQuestionByIdHandler;
-use App\Services\GetQuestionById\GetPracticeQuestionDto;
+use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdCommand;
+use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdHandler;
+use App\Services\GetPracticeQuestionById\GetPracticeQuestionDto;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerHandler;
 use App\Services\ViewAllQuestions\AllQuestionsDto;
