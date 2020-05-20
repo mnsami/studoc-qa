@@ -6,13 +6,13 @@ namespace App\Services\GetQuestionById;
 use App\Domain\Question\Model\Question;
 use App\Infrastructure\Shared\DataTransformer;
 
-class GetQuestionDto implements DataTransformer
+class GetPracticeQuestionDto implements DataTransformer
 {
     /** @var Question */
     private $question;
 
     /**
-     * GetQuestionDto constructor.
+     * GetPracticeQuestionDto constructor.
      * @param Question $question
      */
     public function __construct(Question $question)

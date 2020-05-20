@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Console\InteractiveConsoleCommand;
 use App\Services\GetQuestionById\GetPracticeQuestionByIdCommand;
-use App\Services\GetQuestionById\GetQuestionByIdHandler;
-use App\Services\GetQuestionById\GetQuestionDto;
+use App\Services\GetQuestionById\GetPracticeQuestionByIdHandler;
+use App\Services\GetQuestionById\GetPracticeQuestionDto;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerHandler;
 use App\Services\ViewAllQuestions\AllQuestionsDto;
@@ -36,7 +36,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
     /** @var ViewAllQuestionsHandler */
     private $viewAllQuestionsHandler;
 
-    /** @var GetQuestionByIdHandler */
+    /** @var GetPracticeQuestionByIdHandler */
     private $getQuestionByIdHandler;
 
     /** @var SubmitQuestionAnswerHandler */
@@ -45,12 +45,12 @@ class PracticeQuestion extends InteractiveConsoleCommand
     /**
      * Create a new command instance.
      * @param ViewAllQuestionsHandler $viewAllQuestionsHandler
-     * @param GetQuestionByIdHandler $getQuestionByIdHandler
+     * @param GetPracticeQuestionByIdHandler $getQuestionByIdHandler
      * @param SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
      */
     public function __construct(
         ViewAllQuestionsHandler $viewAllQuestionsHandler,
-        GetQuestionByIdHandler $getQuestionByIdHandler,
+        GetPracticeQuestionByIdHandler $getQuestionByIdHandler,
         SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
     ) {
         parent::__construct();
@@ -104,7 +104,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
         $questionId = $this->ask('Select a question by entering its Id');
 
         if (!$this->shouldQuit($questionId) || !$this->shouldCancel($questionId)) {
-            /** @var GetQuestionDto $questionDto */
+            /** @var GetPracticeQuestionDto $questionDto */
             $questionDto = $this->getQuestionByIdHandler
                 ->handle(
                     new GetPracticeQuestionByIdCommand($questionId)
@@ -114,7 +114,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
         }
     }
 
-    private function askQuestion(GetQuestionDto $questionDto)
+    private function askQuestion(GetPracticeQuestionDto $questionDto)
     {
         $question = $questionDto->toArray();
         $answer = $this->ask('Question: ' . $question['question']);
