@@ -5,13 +5,13 @@ namespace App\Services\GetQuestionById;
 
 use App\Infrastructure\Shared\Command;
 
-class GetQuestionByIdCommand implements Command
+class GetPracticeQuestionByIdCommand implements Command
 {
     /** @var string */
     private $questionId;
 
     /**
-     * GetQuestionByIdCommand constructor.
+     * GetPracticeQuestionByIdCommand constructor.
      * @param string $questionId
      */
     public function __construct(string $questionId)

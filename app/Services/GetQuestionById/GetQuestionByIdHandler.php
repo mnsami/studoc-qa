@@ -26,12 +26,12 @@ class GetQuestionByIdHandler implements CommandHandler
      */
     public function handles(): string
     {
-        return GetQuestionByIdCommand::class;
+        return GetPracticeQuestionByIdCommand::class;
     }
 
     /**
      *
-     * @param GetQuestionByIdCommand $command
+     * @param GetPracticeQuestionByIdCommand $command
      * @return DataTransformer
      * @throws SorryWrongCommand
      */
@@ -50,7 +50,7 @@ class GetQuestionByIdHandler implements CommandHandler
      */
     public function assertItHandlesCommand(Command $command)
     {
-        if (!$command instanceof GetQuestionByIdCommand) {
+        if (!$command instanceof GetPracticeQuestionByIdCommand) {
             throw new SorryWrongCommand('Passed wrong command to handle.');
         }
     }

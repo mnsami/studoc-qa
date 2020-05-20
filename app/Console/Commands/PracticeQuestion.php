@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\InteractiveConsoleCommand;
-use App\Services\GetQuestionById\GetQuestionByIdCommand;
+use App\Services\GetQuestionById\GetPracticeQuestionByIdCommand;
 use App\Services\GetQuestionById\GetQuestionByIdHandler;
 use App\Services\GetQuestionById\GetQuestionDto;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
@@ -107,7 +107,7 @@ class PracticeQuestion extends InteractiveConsoleCommand
             /** @var GetQuestionDto $questionDto */
             $questionDto = $this->getQuestionByIdHandler
                 ->handle(
-                    new GetQuestionByIdCommand($questionId)
+                    new GetPracticeQuestionByIdCommand($questionId)
                 );
 
             $this->askQuestion($questionDto);
