@@ -22,7 +22,7 @@ class EloquentQuestionRepository implements QuestionRepository
      */
     public function findById(int $id): ?Question
     {
-        return Question::find($id);
+        return Question::findOrFail($id);
     }
 
     /**
