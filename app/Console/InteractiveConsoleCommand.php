@@ -14,10 +14,12 @@ abstract class InteractiveConsoleCommand extends Command
     /** @const string */
     protected const CMD_QUIT = 'quit';
     protected const CMD_QUIT_SHORT = 'q';
+    protected const CMD_QUIT_CHOICE = 'Quit application.';
 
     /** @const string */
     protected const CMD_CANCEL = 'cancel';
     protected const CMD_CANCEL_SHORT = 'c';
+    protected const CMD_CANCEL_CHOICE = 'Cancel and go back to menu.';
 
     protected const CANCEL_CHOICES = [
         self::CMD_CANCEL,
@@ -48,7 +50,7 @@ abstract class InteractiveConsoleCommand extends Command
      *
      * @const int
      */
-    protected const TERMINATE_EXIT_CODE = 130;
+    protected const QUIT_EXIT_CODE = 130;
 
     /**
      * Quit exit code
@@ -105,17 +107,80 @@ abstract class InteractiveConsoleCommand extends Command
     /**
      * Breaks the running loop
      */
-    protected function quit(): void
+    protected function confirmQuit(): bool
     {
         if ($this->confirm("Are you sure you want to quit?")) {
-            $this->running = false;
+            return true;
         }
+
+        return false;
     }
 
-    protected function handleSubCommand(int $exitCode)
+    protected function quit(): void
     {
-        if (self::TERMINATE_EXIT_CODE === $exitCode) {
+        $this->running = false;
+    }
+
+    /**
+     * @param int $exitCode
+     * @return int
+     */
+    protected function handleSubCommandExitCodes(int $exitCode): int
+    {
+        if (self::QUIT_EXIT_CODE === $exitCode) {
             $this->quit();
+        }
+
+        if (self::CANCEL_EXIT_CODE === $exitCode) {
+            return $exitCode;
+        }
+
+        return self::SUCCESS_EXIT_CODE;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    private function commonChoices(): array
+    {
+        return [
+            self::CMD_CANCEL => self::CMD_CANCEL_CHOICE,
+            self::CMD_QUIT => self::CMD_QUIT_CHOICE
+        ];
+    }
+
+    /**
+     * Command specific choices
+     * @return array
+     */
+    protected abstract function commandChoices(): array;
+
+    /**
+     * @return array|string[]
+     */
+    protected function choices(): array
+    {
+        return $this->commandChoices() + $this->commonChoices();
+    }
+
+    /**
+     * @param string $choice
+     * @return int
+     */
+    protected function handleCommonInputChoice(string $choice): int
+    {
+        switch ($choice) {
+            case self::CMD_QUIT_SHORT:
+            case self::CMD_QUIT:
+                if ($this->confirmQuit()) {
+                    $this->quit();
+                    return self::QUIT_EXIT_CODE;
+                }
+                break;
+            case self::CMD_CANCEL:
+            case self::CMD_CANCEL_SHORT:
+                return self::CANCEL_EXIT_CODE;
+                break;
         }
     }
 }
