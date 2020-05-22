@@ -37,7 +37,7 @@ class EloquentAnswerRepository implements AnswerRepository, EloquentRepository
     /**
      * @inheritDoc
      */
-    public function save(Answer $answer): int
+    public function save(Answer $answer): Answer
     {
         if ($answer->id === null) {
             $this->getTableQueryBuilder()
@@ -55,5 +55,7 @@ class EloquentAnswerRepository implements AnswerRepository, EloquentRepository
                 'answer' => $answer->answer,
                 'is_correct' => $answer->is_correct
             ]);
+
+        return $answer->refresh();
     }
 }

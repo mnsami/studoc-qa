@@ -27,8 +27,9 @@ interface QuestionRepository
      * Add new question
      *
      * @param Question $question
+     * @return Question
      */
-    public function save(Question $question): void;
+    public function save(Question $question): Question;
 
     /**
      * Return questions count

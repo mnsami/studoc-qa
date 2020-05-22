@@ -17,7 +17,7 @@ interface AnswerRepository
      * Save answer to a question
      *
      * @param Answer $answer
-     * @return void
+     * @return Answer
      */
-    public function save(Answer $answer): void;
+    public function save(Answer $answer): Answer;
 }

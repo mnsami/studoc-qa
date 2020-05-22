@@ -48,7 +48,7 @@ class EloquentQuestionRepository implements QuestionRepository, EloquentReposito
     /**
      * @inheritDoc
      */
-    public function save(Question $question): void
+    public function save(Question $question): Question
     {
         if ($question->id === null) {
             $this->getTableQueryBuilder()
@@ -59,15 +59,17 @@ class EloquentQuestionRepository implements QuestionRepository, EloquentReposito
                         'is_answered' => $question->is_answered
                     ]
                 );
-        } else {
-            $this->getTableQueryBuilder()
-                ->where('id', $question->id)
-                ->update([
-                    'body' => $question->body,
-                    'answer' => $question->answer,
-                    'is_answered' => $question->is_answered
-                ]);
         }
+
+        $this->getTableQueryBuilder()
+            ->where('id', $question->id)
+            ->update([
+                'body' => $question->body,
+                'answer' => $question->answer,
+                'is_answered' => $question->is_answered
+            ]);
+
+        return $question->refresh();
     }
 
     /**

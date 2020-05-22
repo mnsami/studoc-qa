@@ -75,9 +75,9 @@ class SubmitQuestionAnswerHandler implements CommandHandler
         $question->is_answered = true;
 
         $this->questionRepository->save($question);
-        $this->answerRepository->save($answer);
+        $answer = $this->answerRepository->save($answer);
 
-        return new EmptyDto();
+        return new SubmitQuestionAnswerResultDto($answer);
     }
 
     /**
