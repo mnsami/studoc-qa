@@ -8,16 +8,19 @@ use App\Domain\Question\Model\AnswerRepository;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
-class EloquentAnswerRepository implements AnswerRepository
+class EloquentAnswerRepository implements AnswerRepository, EloquentRepository
 {
     /**
-     * @return Builder
+     * @inheritDoc
      */
-    private function getTableQueryBuilder(): Builder
+    public function getTableQueryBuilder(): Builder
     {
         return DB::table(Answer::tableName());
     }
 
+    /**
+     * @inheritDoc
+     */
     public function findByQuestionId(string $questionId): ?Answer
     {
         $answer = $this->getTableQueryBuilder()
@@ -31,10 +34,23 @@ class EloquentAnswerRepository implements AnswerRepository
         return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function save(Answer $answer): int
     {
-        return $this->getTableQueryBuilder()
-            ->insertGetId([
+        if ($answer->id === null) {
+            $this->getTableQueryBuilder()
+                ->insert([
+                    'question_id' => $answer->question_id,
+                    'answer' => $answer->answer,
+                    'is_correct' => $answer->is_correct
+                ]);
+        }
+
+        $this->getTableQueryBuilder()
+            ->where('id', $answer->id)
+            ->update([
                 'question_id' => $answer->question_id,
                 'answer' => $answer->answer,
                 'is_correct' => $answer->is_correct

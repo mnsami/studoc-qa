@@ -29,4 +29,11 @@ interface QuestionRepository
      * @param Question $question
      */
     public function save(Question $question): void;
+
+    /**
+     * Return questions count
+     *
+     * @return int
+     */
+    public function count(): int;
 }

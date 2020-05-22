@@ -6,15 +6,14 @@ namespace App\Infrastructure\Persistence;
 use App\Domain\Question\Model\Question;
 use App\Domain\Question\Model\QuestionRepository;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class EloquentQuestionRepository implements QuestionRepository
+class EloquentQuestionRepository implements QuestionRepository, EloquentRepository
 {
     /**
-     * @return Builder
+     * @inheritDoc
      */
-    private function getTableQueryBuilder(): Builder
+    public function getTableQueryBuilder(): Builder
     {
         return DB::table(Question::tableName());
     }
@@ -69,5 +68,13 @@ class EloquentQuestionRepository implements QuestionRepository
                     'is_answered' => $question->is_answered
                 ]);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function count(): int
+    {
+        return $this->getTableQueryBuilder()->count();
     }
 }
