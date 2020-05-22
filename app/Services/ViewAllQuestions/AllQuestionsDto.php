@@ -25,7 +25,7 @@ class AllQuestionsDto implements DataTransformer
             return [
                 'id' => $question->id,
                 'body' => $question->body,
-                'isAnswered' => $question->is_answered ? 'yes' : 'no',
+                'isAnswered' => $question->is_answered,
             ];
         }, $this->questions);
     }

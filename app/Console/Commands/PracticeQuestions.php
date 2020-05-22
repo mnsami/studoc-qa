@@ -9,6 +9,7 @@ use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdHandler;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionDto;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerHandler;
+use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerResultDto;
 use App\Services\ViewAllQuestions\AllQuestionsDto;
 use App\Services\ViewAllQuestions\ViewAllQuestionsCommand;
 use App\Services\ViewAllQuestions\ViewAllQuestionsHandler;
@@ -69,6 +70,29 @@ class PracticeQuestions extends InteractiveConsoleCommand
         $questions = $this->viewAllQuestionsHandler->handle(new ViewAllQuestionsCommand());
         $this->line($this->writePaddedString("\nList of all available questions for practice.\n"));
         $this->table($questions->fields(), $questions->toArray());
+
+        $this->showCurrentProgress($questions);
+    }
+
+    /**
+     * Print user progress
+     * @param AllQuestionsDto $allQuestionsDto
+     */
+    protected function showCurrentProgress(AllQuestionsDto $allQuestionsDto): void
+    {
+        $answeredQuestions = array_filter($allQuestionsDto->toArray(),
+            function (array $question) {
+                return $question['isAnswered'];
+            });
+
+        $this->info('Your current progress is...');
+        $progressBar = $this->output->createProgressBar(count($allQuestionsDto->toArray()));
+        $progressBar->start();
+        $progressBar->setProgress(count($answeredQuestions));
+        $progressBar->clear();
+        $progressBar->display();
+
+        $this->line("\n");
     }
 
     /**
@@ -131,13 +155,28 @@ class PracticeQuestions extends InteractiveConsoleCommand
 
         if (!$this->shouldQuit($answer) && !$this->shouldCancel($answer)) {
             try{
-                $this->submitQuestionAnswerHandler
+                /** @var SubmitQuestionAnswerResultDto $submitAnswerResultDto */
+                $submitAnswerResultDto = $this->submitQuestionAnswerHandler
                     ->handle(
                         new SubmitQuestionAnswerCommand($answer, $question['id'])
                     );
             } catch (KernelException $e) {
                 $this->error($e->getMessage());
             }
+
+            $this->showAnswerResult($submitAnswerResultDto);
+        }
+    }
+
+    /**
+     * @param SubmitQuestionAnswerResultDto $submitQuestionAnswerResultDto
+     */
+    protected function showAnswerResult(SubmitQuestionAnswerResultDto $submitQuestionAnswerResultDto)
+    {
+        if ($submitQuestionAnswerResultDto->isCorrectResult()) {
+            $this->info('Your submitted answer is correct !');
+        } else {
+            $this->warn('Sorry, you submitted a wrong answer :(');
         }
     }
 

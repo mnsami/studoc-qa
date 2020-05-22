@@ -32,4 +32,13 @@ class SubmitQuestionAnswerResultDto implements DataTransformer
             'is_correct' => $this->answer->is_correct
         ];
     }
+
+    /**
+     * Return true, if submitted is correct, false otherwise
+     * @return bool
+     */
+    public function isCorrectResult(): bool
+    {
+        return $this->answer->is_correct;
+    }
 }
