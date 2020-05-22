@@ -32,7 +32,7 @@ As a common practice to separation of concerns. I tried as much as possible to f
 So, after some research and reading, I decided to follow this blog [post](https://lorisleiva.com/conciliating-laravel-and-ddd-part-2/), as I found it was a common way to do things in laravel. 
 
 ### CQRS
-I tried to follow the CQRS pattern by creating several commands and handlers which live in `Services` folder.
+I tried to follow the CQRS pattern by creating several commands and handlers which live in `app/Services` folder.
 
 This helped me isolate the logic and follow single responsibility services.
 
@@ -49,9 +49,12 @@ I decided to go with option 2 and that is because:
 - Simplicity of the task, I don't like to over complicate things.
 - I believed it is simpler than adding another layer.
 
-### Ideas for improvements
-- User different models from the Eloquent models. 
+### Query builder
+In my repositories in `app/Infrastructure/Persistence`,I decided to use the query build instead of using the model to run queries .. etc.
 
+### Ideas for improvements
+- User different models from the Eloquent models, improves separation of concerns and less tying to the framework. 
+- Write tests
 
 ## Problem description
 
