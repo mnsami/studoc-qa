@@ -9,7 +9,7 @@ use App\Infrastructure\Shared\Command;
 use App\Infrastructure\Shared\CommandHandler;
 use App\Infrastructure\Shared\DataTransformer;
 
-class ViewAllQuestionsHandler implements CommandHandler
+class ViewAllQuestionsCommandHandler implements CommandHandler
 {
     /** @var QuestionRepository */
     private $questionRepository;

@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Services\GetPracticeQuestionById;
+namespace App\Services\SubmitQuestionAnswer;
 
+use App\Domain\Question\Model\Answer;
 use App\Domain\Question\Model\AnswerRepository;
 use App\Domain\Question\Model\QuestionRepository;
 use App\Exceptions\SorryQuestionIsAlreadyAnswered;
@@ -11,17 +12,18 @@ use App\Exceptions\SorryWrongCommand;
 use App\Infrastructure\Shared\Command;
 use App\Infrastructure\Shared\CommandHandler;
 use App\Infrastructure\Shared\DataTransformer;
+use App\Infrastructure\Shared\EmptyDto;
 
-class GetPracticeQuestionByIdHandler implements CommandHandler
+class SubmitQuestionAnswerCommandHandler implements CommandHandler
 {
-    /** @var QuestionRepository */
-    private $questionRepository;
-
     /** @var AnswerRepository */
     private $answerRepository;
 
+    /** @var QuestionRepository */
+    private $questionRepository;
+
     /**
-     * GetPracticeQuestionByIdHandler constructor.
+     * SubmitQuestionAnswerCommandHandler constructor.
      * @param AnswerRepository $answerRepository
      * @param QuestionRepository $questionRepository
      */
@@ -33,27 +35,26 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
         $this->questionRepository = $questionRepository;
     }
 
-    /**
-     * @inheritDoc
-     */
+
     public function handles(): string
     {
-        return GetPracticeQuestionByIdCommand::class;
+        return SubmitQuestionAnswerCommand::class;
     }
 
     /**
-     *
-     * @param GetPracticeQuestionByIdCommand $command
+     * @param SubmitQuestionAnswerCommand $command
      * @return DataTransformer
      * @throws SorryWrongCommand
-     * @throws SorryQuestionIsAlreadyAnswered
      * @throws SorryQuestionNotFound
+     * @throws SorryQuestionIsAlreadyAnswered
      */
     public function handle(Command $command): DataTransformer
     {
         $this->assertItHandlesCommand($command);
 
         $questionId = $command->questionId();
+        $userAnswer = $command->answer();
+
         $question = $this->questionRepository->findById($questionId);
         if ($question === null) {
             throw new SorryQuestionNotFound("Question with Id {$questionId} not found.");
@@ -62,11 +63,21 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
         $answer = $this->answerRepository->findByQuestionId($questionId);
         if ($answer !== null) {
             throw new SorryQuestionIsAlreadyAnswered(
-                'You already practiced question with id: ' . $questionId
+                'You already practiced this question: .' . $questionId
             );
         }
 
-        return new GetPracticeQuestionDto($question);
+        $answer = new Answer();
+        $answer->question_id = $questionId;
+        $answer->answer = $userAnswer;
+        $answer->is_correct = $userAnswer === $question->answer;
+
+        $question->is_answered = true;
+
+        $this->questionRepository->save($question);
+        $answer = $this->answerRepository->save($answer);
+
+        return new SubmitQuestionAnswerResultDto($answer);
     }
 
     /**
@@ -75,7 +86,7 @@ class GetPracticeQuestionByIdHandler implements CommandHandler
      */
     public function assertItHandlesCommand(Command $command)
     {
-        if (!$command instanceof GetPracticeQuestionByIdCommand) {
+        if (!$command instanceof SubmitQuestionAnswerCommand) {
             throw new SorryWrongCommand('Passed wrong command to handle.');
         }
     }

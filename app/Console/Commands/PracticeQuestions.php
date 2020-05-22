@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use App\Console\InteractiveConsoleCommand;
 use App\Exceptions\KernelException;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdCommand;
-use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdHandler;
+use App\Services\GetPracticeQuestionById\GetPracticeQuestionByIdCommandHandler;
 use App\Services\GetPracticeQuestionById\GetPracticeQuestionDto;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommand;
-use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerHandler;
+use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerCommandHandler;
 use App\Services\SubmitQuestionAnswer\SubmitQuestionAnswerResultDto;
 use App\Services\ViewAllQuestions\AllQuestionsDto;
 use App\Services\ViewAllQuestions\ViewAllQuestionsCommand;
-use App\Services\ViewAllQuestions\ViewAllQuestionsHandler;
+use App\Services\ViewAllQuestions\ViewAllQuestionsCommandHandler;
 
 class PracticeQuestions extends InteractiveConsoleCommand
 {
@@ -35,25 +35,25 @@ class PracticeQuestions extends InteractiveConsoleCommand
     private const CMD_PRACTICE_SHORT = 'p';
     private const CMD_PRACTICE_CHOICE = 'Start practicing';
 
-    /** @var ViewAllQuestionsHandler */
+    /** @var ViewAllQuestionsCommandHandler */
     private $viewAllQuestionsHandler;
 
-    /** @var GetPracticeQuestionByIdHandler */
+    /** @var GetPracticeQuestionByIdCommandHandler */
     private $getPracticeQuestionByIdHandler;
 
-    /** @var SubmitQuestionAnswerHandler */
+    /** @var SubmitQuestionAnswerCommandHandler */
     private $submitQuestionAnswerHandler;
 
     /**
      * Create a new command instance.
-     * @param ViewAllQuestionsHandler $viewAllQuestionsHandler
-     * @param GetPracticeQuestionByIdHandler $getPracticeQuestionByIdHandler
-     * @param SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
+     * @param ViewAllQuestionsCommandHandler $viewAllQuestionsHandler
+     * @param GetPracticeQuestionByIdCommandHandler $getPracticeQuestionByIdHandler
+     * @param SubmitQuestionAnswerCommandHandler $submitQuestionAnswerHandler
      */
     public function __construct(
-        ViewAllQuestionsHandler $viewAllQuestionsHandler,
-        GetPracticeQuestionByIdHandler $getPracticeQuestionByIdHandler,
-        SubmitQuestionAnswerHandler $submitQuestionAnswerHandler
+        ViewAllQuestionsCommandHandler $viewAllQuestionsHandler,
+        GetPracticeQuestionByIdCommandHandler $getPracticeQuestionByIdHandler,
+        SubmitQuestionAnswerCommandHandler $submitQuestionAnswerHandler
     ) {
         parent::__construct();
         $this->viewAllQuestionsHandler = $viewAllQuestionsHandler;

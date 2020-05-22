@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Console\ConsoleStringFormatter;
 use App\Console\InteractiveConsoleCommand;
 use App\Services\AddNewQuestion\AddNewQuestionCommand;
-use App\Services\AddNewQuestion\AddNewQuestionHandler;
+use App\Services\AddNewQuestion\AddNewQuestionCommandHandler;
 
 class AddNewQuestion extends InteractiveConsoleCommand
 {
@@ -23,7 +23,7 @@ class AddNewQuestion extends InteractiveConsoleCommand
      */
     protected $description = 'Runs an interactive command line to add a new question and its answer.';
 
-    /** @var AddNewQuestionHandler */
+    /** @var AddNewQuestionCommandHandler */
     private $addNewQuestionHandler;
 
     /** @const string */
@@ -34,10 +34,10 @@ class AddNewQuestion extends InteractiveConsoleCommand
     /**
      * Create a new command instance.
      *
-     * @param AddNewQuestionHandler $addNewQuestionHandler
+     * @param AddNewQuestionCommandHandler $addNewQuestionHandler
      */
     public function __construct(
-        AddNewQuestionHandler $addNewQuestionHandler
+        AddNewQuestionCommandHandler $addNewQuestionHandler
     ) {
         parent::__construct();
         $this->addNewQuestionHandler = $addNewQuestionHandler;

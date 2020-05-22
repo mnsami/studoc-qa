@@ -11,7 +11,7 @@ use App\Infrastructure\Shared\CommandHandler;
 use App\Infrastructure\Shared\DataTransformer;
 use App\Infrastructure\Shared\EmptyDto;
 
-class AddNewQuestionHandler implements CommandHandler
+class AddNewQuestionCommandHandler implements CommandHandler
 {
     /** @var QuestionRepository */
     private $questionRepository;
