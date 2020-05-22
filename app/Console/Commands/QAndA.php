@@ -33,16 +33,10 @@ class QAndA extends InteractiveConsoleCommand
     private const CMD_PRACTICE_SHORT = 'p';
     private const CMD_PRACTICE_CHOICE = 'Practice questions';
 
-    /** @const string */
-    private const CMD_PROGRESS = 'progress';
-    private const CMD_PROGRESS_SHORT = 'g';
-    private const CMD_PROGRESS_CHOICE = 'Show your progress.';
-
     /** @const array */
     private const MAIN_MENU_CHOICES = [
         self::CMD_ADD_NEW => self::CMD_ADD_CHOICE,
         self::CMD_PRACTICE => self::CMD_PRACTICE_CHOICE,
-        self::CMD_PROGRESS => self::CMD_PROGRESS_CHOICE
     ];
 
     /**
@@ -83,7 +77,7 @@ class QAndA extends InteractiveConsoleCommand
                     $this->handleSubCommandExitCodes($this->call('qanda:practice-questions'));
                     break;
                 default:
-                    $this->handleCommonInputChoice($choice);
+                    $this->handleTerminationInputChoice($choice);
                     break;
             }
         }

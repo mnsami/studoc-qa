@@ -131,10 +131,12 @@ class PracticeQuestions extends InteractiveConsoleCommand
             switch ($choice) {
                 case self::CMD_PRACTICE:
                 case self::CMD_PRACTICE_SHORT:
-                    $this->handlePracticeQuestion();
+                    if ($this->handleTerminationInputChoice($this->handlePracticeQuestion()) === self::QUIT_EXIT_CODE) {
+                        return self::QUIT_EXIT_CODE;
+                    }
                     break;
                 default:
-                    return $this->handleCommonInputChoice($choice);
+                    return $this->handleTerminationInputChoice($choice);
                     break;
             }
         }
@@ -142,7 +144,7 @@ class PracticeQuestions extends InteractiveConsoleCommand
         return self::SUCCESS_EXIT_CODE;
     }
 
-    protected function handlePracticeQuestion()
+    protected function handlePracticeQuestion(): string
     {
         do {
             $questionId = trim($this->ask('Select a question by entering its Id'));
@@ -161,9 +163,11 @@ class PracticeQuestions extends InteractiveConsoleCommand
                 $this->error($e->getMessage());
             }
         }
+
+        return $questionId;
     }
 
-    private function askQuestion(GetPracticeQuestionDto $questionDto)
+    private function askQuestion(GetPracticeQuestionDto $questionDto): string
     {
         $question = $questionDto->toArray();
         do {
@@ -184,6 +188,8 @@ class PracticeQuestions extends InteractiveConsoleCommand
 
             $this->showAnswerResult($submitAnswerResultDto);
         }
+
+        return $answer;
     }
 
     /**
@@ -192,9 +198,9 @@ class PracticeQuestions extends InteractiveConsoleCommand
     protected function showAnswerResult(SubmitQuestionAnswerResultDto $submitQuestionAnswerResultDto)
     {
         if ($submitQuestionAnswerResultDto->isCorrectResult()) {
-            $this->info('Your submitted answer is correct !');
+            $this->info("Your submitted answer is correct !\n");
         } else {
-            $this->warn('Sorry, you submitted a wrong answer :(');
+            $this->warn("Sorry, you submitted a wrong answer :(\n");
         }
     }
 

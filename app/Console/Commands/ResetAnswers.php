@@ -20,7 +20,7 @@ class ResetAnswers extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Runs an interactive command line to truncate / reset all previous answers.';
 
     /** @var ResetAllAnswersCommandHandler */
     private $resetAllAnswersCommandHandler;

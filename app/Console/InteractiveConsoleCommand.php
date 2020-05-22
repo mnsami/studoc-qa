@@ -167,7 +167,7 @@ abstract class InteractiveConsoleCommand extends Command
      * @param string $choice
      * @return int
      */
-    protected function handleCommonInputChoice(string $choice): int
+    protected function handleTerminationInputChoice(string $choice): int
     {
         switch ($choice) {
             case self::CMD_QUIT_SHORT:
@@ -181,6 +181,9 @@ abstract class InteractiveConsoleCommand extends Command
             case self::CMD_CANCEL:
             case self::CMD_CANCEL_SHORT:
                 return self::CANCEL_EXIT_CODE;
+                break;
+            case self::ERROR_EXIT_CODE:
+                return self::ERROR_EXIT_CODE;
                 break;
         }
 

@@ -47,6 +47,7 @@ class AddNewQuestion extends InteractiveConsoleCommand
      * Execute the console command.
      *
      * @return mixed
+     * @throws \App\Exceptions\SorryWrongCommand
      */
     public function handle()
     {
@@ -61,10 +62,12 @@ class AddNewQuestion extends InteractiveConsoleCommand
             switch ($choice) {
                 case self::CMD_ADD_NEW:
                 case self::CMD_ADD_NEW_SHORT:
-                    $this->addNewQuestion();
+                    if ($this->handleTerminationInputChoice($this->addNewQuestion()) === self::QUIT_EXIT_CODE) {
+                        return self::QUIT_EXIT_CODE;
+                    }
                     break;
                 default:
-                    return $this->handleCommonInputChoice($choice);
+                    return $this->handleTerminationInputChoice($choice);
                     break;
             }
         }
@@ -72,7 +75,11 @@ class AddNewQuestion extends InteractiveConsoleCommand
         return self::SUCCESS_EXIT_CODE;
     }
 
-    private function addNewQuestion(): void
+    /**
+     * @return string
+     * @throws \App\Exceptions\SorryWrongCommand
+     */
+    private function addNewQuestion(): string
     {
         $question = $this->promptQuestion();
         if (!$this->shouldCancel($question) && !$this->shouldQuit($question)) {
@@ -81,8 +88,12 @@ class AddNewQuestion extends InteractiveConsoleCommand
                 $this->addNewQuestionHandler->handle(
                     new AddNewQuestionCommand($question, $answer)
                 );
+            } else {
+                return $answer;
             }
         }
+
+        return $question;
     }
 
     /**
