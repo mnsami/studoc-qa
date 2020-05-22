@@ -27,9 +27,9 @@ class SubmitQuestionAnswerResultDto implements DataTransformer
     {
         return [
             'id' => $this->answer->id,
-            'question_id' => $this->answer->question_id,
+            'questionId' => $this->answer->question_id,
             'answer' => $this->answer->answer,
-            'is_correct' => $this->answer->is_correct
+            'isCorrect' => $this->answer->is_correct
         ];
     }
 

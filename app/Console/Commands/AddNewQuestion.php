@@ -91,13 +91,13 @@ class AddNewQuestion extends InteractiveConsoleCommand
      * @param string $question
      * @return string
      */
-    private function promptQuestionAnswer(string $question): ?string
+    private function promptQuestionAnswer(string $question): string
     {
         do {
             $answer = trim($this->ask("Add the model answer for question {$question}"));
         } while ($answer === '');
 
-        return null;
+        return $answer;
     }
 
     /**

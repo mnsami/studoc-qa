@@ -43,8 +43,7 @@ class Question extends Model
 
         $question->id = $data->id;
         $question->body = $data->body;
-        $question->answer = $data->answer;
-        $question->is_answered = $data->is_answered;
+        $question->model_answer = $data->model_answer;
 
         return $question;
     }
@@ -54,8 +53,7 @@ class Question extends Model
         $questionModel = new Question();
 
         $questionModel->body = $body;
-        $questionModel->answer = $answer;
-        $questionModel->is_answered = false;
+        $questionModel->model_answer = $answer;
 
         return $questionModel;
     }

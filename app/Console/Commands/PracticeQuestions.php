@@ -36,13 +36,13 @@ class PracticeQuestions extends InteractiveConsoleCommand
     private const CMD_PRACTICE_CHOICE = 'Start practicing';
 
     /** @var ViewAllQuestionsCommandHandler */
-    private $viewAllQuestionsHandler;
+    private $viewAllQuestionsCommandHandler;
 
     /** @var GetPracticeQuestionByIdCommandHandler */
-    private $getPracticeQuestionByIdHandler;
+    private $getPracticeQuestionByIdCommandHandler;
 
     /** @var SubmitQuestionAnswerCommandHandler */
-    private $submitQuestionAnswerHandler;
+    private $submitQuestionAnswerCommandHandler;
 
     /**
      * Create a new command instance.
@@ -56,22 +56,39 @@ class PracticeQuestions extends InteractiveConsoleCommand
         SubmitQuestionAnswerCommandHandler $submitQuestionAnswerHandler
     ) {
         parent::__construct();
-        $this->viewAllQuestionsHandler = $viewAllQuestionsHandler;
-        $this->getPracticeQuestionByIdHandler = $getPracticeQuestionByIdHandler;
-        $this->submitQuestionAnswerHandler = $submitQuestionAnswerHandler;
+        $this->viewAllQuestionsCommandHandler = $viewAllQuestionsHandler;
+        $this->getPracticeQuestionByIdCommandHandler = $getPracticeQuestionByIdHandler;
+        $this->submitQuestionAnswerCommandHandler = $submitQuestionAnswerHandler;
     }
 
     /**
      * Print all question
+     * @throws \App\Exceptions\SorryWrongCommand
      */
     protected function printAllQuestions(): void
     {
         /** @var AllQuestionsDto $questions */
-        $questions = $this->viewAllQuestionsHandler->handle(new ViewAllQuestionsCommand());
+        $questions = $this->viewAllQuestionsCommandHandler->handle(new ViewAllQuestionsCommand());
         $this->line($this->writePaddedString("\nList of all available questions for practice.\n"));
-        $this->table($questions->fields(), $questions->toArray());
+        $this->tablize($questions);
 
         $this->showCurrentProgress($questions);
+    }
+
+    protected function tablize(AllQuestionsDto $allQuestionsDto): void
+    {
+        $fields = $allQuestionsDto->fields();
+
+        $records = array_map(function (array $question) {
+            return [
+                $question['id'],
+                $question['body'],
+                $question['answer']? $question['answer']['answer'] : null,
+                $question['answer']? $question['answer']['is_correct'] : null
+            ];
+        }, $allQuestionsDto->toArray());
+
+        $this->table($fields, $records);
     }
 
     /**
@@ -82,8 +99,9 @@ class PracticeQuestions extends InteractiveConsoleCommand
     {
         $answeredQuestions = array_filter($allQuestionsDto->toArray(),
             function (array $question) {
-                return $question['isAnswered'];
+                return $question['answer'] ? true : false;
             });
+
 
         $this->info('Your current progress is...');
         $progressBar = $this->output->createProgressBar(count($allQuestionsDto->toArray()));
@@ -133,7 +151,7 @@ class PracticeQuestions extends InteractiveConsoleCommand
         if (!$this->shouldQuit($questionId) && !$this->shouldCancel($questionId)) {
             try {
                 /** @var GetPracticeQuestionDto $questionDto */
-                $questionDto = $this->getPracticeQuestionByIdHandler
+                $questionDto = $this->getPracticeQuestionByIdCommandHandler
                     ->handle(
                         new GetPracticeQuestionByIdCommand($questionId)
                     );
@@ -156,7 +174,7 @@ class PracticeQuestions extends InteractiveConsoleCommand
         if (!$this->shouldQuit($answer) && !$this->shouldCancel($answer)) {
             try{
                 /** @var SubmitQuestionAnswerResultDto $submitAnswerResultDto */
-                $submitAnswerResultDto = $this->submitQuestionAnswerHandler
+                $submitAnswerResultDto = $this->submitQuestionAnswerCommandHandler
                     ->handle(
                         new SubmitQuestionAnswerCommand($answer, $question['id'])
                     );

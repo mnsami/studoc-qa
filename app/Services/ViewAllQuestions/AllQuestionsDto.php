@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services\ViewAllQuestions;
 
+use App\Domain\Question\Model\Answer;
 use App\Domain\Question\Model\Question;
 use App\Infrastructure\Shared\DataTransformer;
 
@@ -22,23 +23,28 @@ class AllQuestionsDto implements DataTransformer
     public function toArray(): array
     {
         return array_map(function (Question $question) {
+            /** @var Answer $answer */
+            $answer = $question->answer ?? null;
+
             return [
                 'id' => $question->id,
                 'body' => $question->body,
-                'isAnswered' => $question->is_answered,
+                'answer' => $answer ? $answer->toArray() : null
             ];
         }, $this->questions);
     }
 
     /**
-     * @inheritDoc
+     * Fields
+     * @return array|string[]
      */
     public function fields(): array
     {
         return [
             'id',
             'body',
-            'isAnswered'
+            'yourAnswer',
+            'isCorrect'
         ];
     }
 }

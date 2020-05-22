@@ -55,8 +55,7 @@ class EloquentQuestionRepository implements QuestionRepository, EloquentReposito
                 ->insert(
                     [
                         'body' => $question->body,
-                        'answer' => $question->answer,
-                        'is_answered' => $question->is_answered
+                        'model_answer' => $question->model_answer,
                     ]
                 );
         }
@@ -65,8 +64,7 @@ class EloquentQuestionRepository implements QuestionRepository, EloquentReposito
             ->where('id', $question->id)
             ->update([
                 'body' => $question->body,
-                'answer' => $question->answer,
-                'is_answered' => $question->is_answered
+                'model_answer' => $question->model_answer,
             ]);
 
         return $question->refresh();
