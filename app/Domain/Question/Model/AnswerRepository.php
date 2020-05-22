@@ -20,4 +20,9 @@ interface AnswerRepository
      * @return Answer
      */
     public function save(Answer $answer): Answer;
+
+    /**
+     * Reset questions answers
+     */
+    public function reset(): void;
 }

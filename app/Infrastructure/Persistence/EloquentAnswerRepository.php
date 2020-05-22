@@ -58,4 +58,12 @@ class EloquentAnswerRepository implements AnswerRepository, EloquentRepository
 
         return $answer->refresh();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function reset(): void
+    {
+        $this->getTableQueryBuilder()->truncate();
+    }
 }
