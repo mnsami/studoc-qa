@@ -12,7 +12,6 @@ use App\Exceptions\SorryWrongCommand;
 use App\Infrastructure\Shared\Command;
 use App\Infrastructure\Shared\CommandHandler;
 use App\Infrastructure\Shared\DataTransformer;
-use App\Infrastructure\Shared\EmptyDto;
 
 class SubmitQuestionAnswerCommandHandler implements CommandHandler
 {

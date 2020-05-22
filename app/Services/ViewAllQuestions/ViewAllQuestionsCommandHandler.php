@@ -19,11 +19,19 @@ class ViewAllQuestionsCommandHandler implements CommandHandler
         $this->questionRepository = $questionRepository;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function handles(): string
     {
         return ViewAllQuestionsCommand::class;
     }
 
+    /**
+     * @param ViewAllQuestionsCommand $command
+     * @return DataTransformer
+     * @throws SorryWrongCommand
+     */
     public function handle(Command $command): DataTransformer
     {
         $this->assertItHandlesCommand($command);
@@ -33,6 +41,9 @@ class ViewAllQuestionsCommandHandler implements CommandHandler
         return new AllQuestionsDto(...$questions);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function assertItHandlesCommand(Command $command)
     {
         if (!$command instanceof ViewAllQuestionsCommand) {

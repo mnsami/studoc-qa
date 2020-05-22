@@ -15,6 +15,18 @@ class ResetAllAnswersCommandHandler implements CommandHandler
     /** @var AnswerRepository */
     private $answerRepository;
 
+    /**
+     * ResetAllAnswersCommandHandler constructor.
+     * @param AnswerRepository $answerRepository
+     */
+    public function __construct(AnswerRepository $answerRepository)
+    {
+        $this->answerRepository = $answerRepository;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function handles(): string
     {
         return ResetAllAnswersCommand::class;
