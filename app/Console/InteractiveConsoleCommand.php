@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Console;
+
 use Illuminate\Console\Command;
 
 abstract class InteractiveConsoleCommand extends Command
@@ -72,7 +73,7 @@ abstract class InteractiveConsoleCommand extends Command
     /**
      * Print Menu for command
      */
-    protected abstract function showMenu(): void;
+    abstract protected function showMenu(): void;
 
     /**
      * Checks if user input to cancel
@@ -153,7 +154,7 @@ abstract class InteractiveConsoleCommand extends Command
      * Command specific choices
      * @return array
      */
-    protected abstract function commandChoices(): array;
+    abstract protected function commandChoices(): array;
 
     /**
      * @return array|string[]

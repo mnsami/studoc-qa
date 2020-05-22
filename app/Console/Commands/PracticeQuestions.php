@@ -97,10 +97,12 @@ class PracticeQuestions extends InteractiveConsoleCommand
      */
     protected function showCurrentProgress(AllQuestionsDto $allQuestionsDto): void
     {
-        $answeredQuestions = array_filter($allQuestionsDto->toArray(),
+        $answeredQuestions = array_filter(
+            $allQuestionsDto->toArray(),
             function (array $question) {
                 return $question['answer'] ? true : false;
-            });
+            }
+        );
 
 
         $this->info('Your current progress is...');
@@ -123,7 +125,6 @@ class PracticeQuestions extends InteractiveConsoleCommand
         $this->running = true;
 
         while ($this->running) {
-
             $this->showMenu();
 
             $choice = $this->choice('Choose from menu below', $this->choices());
@@ -176,7 +177,7 @@ class PracticeQuestions extends InteractiveConsoleCommand
 
 
         if (!$this->shouldQuit($answer) && !$this->shouldCancel($answer)) {
-            try{
+            try {
                 /** @var SubmitQuestionAnswerResultDto $submitAnswerResultDto */
                 $submitAnswerResultDto = $this->submitQuestionAnswerCommandHandler
                     ->handle(

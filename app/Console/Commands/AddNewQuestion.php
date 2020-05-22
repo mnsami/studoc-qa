@@ -54,7 +54,6 @@ class AddNewQuestion extends InteractiveConsoleCommand
         $this->running = true;
 
         while ($this->running) {
-
             $this->showMenu();
 
             $choice = $this->choice('Choose from menu below', $this->choices());

@@ -25,10 +25,14 @@ trait ConsoleStringFormatter
      * @param string $string String to output
      * @param string $padding Optional. Specifies the string to use for padding. Default is whitespace
      *
+     * @param string $border
      * @return string
      */
-    public function writePaddedStringWithLeftRightBorders(string $string, string $padding = " ", string $border = '|'): string
-    {
+    public function writePaddedStringWithLeftRightBorders(
+        string $string,
+        string $padding = " ",
+        string $border = '|'
+    ): string {
         return $border . $this->writePaddedString($string, $padding) . $border;
     }
 }

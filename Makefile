@@ -21,15 +21,7 @@ help:
 	@ echo "Available targets:\n"
 	@ cat Makefile | grep -oE "^[^: ]+:" | grep -oE "[^:]+" | grep -Ev "help|default|.PHONY"
 
-all: container-up clear lint-composer lint-php lint-json lint-eol composer-install phpcs tests
-
-cc:
-	@echo "\n==> Clearing cache"
-	rm -rf var/cache/*
-
-clear: cc
-	@echo "\n==> Cleaning project and starting up fresh"
-	rm -rf vendor/* var/logs/* var/log/* bin/php* coverage/
+all: container-up lint-composer lint-php lint-json lint-eol composer-install phpcs tests
 
 container-stop:
 	@echo "\n==> Stopping docker container"

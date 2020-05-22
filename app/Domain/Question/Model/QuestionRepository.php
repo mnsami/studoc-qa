@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Question\Model;
 
-
 use Illuminate\Support\Collection;
 
 interface QuestionRepository

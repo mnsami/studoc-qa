@@ -57,7 +57,6 @@ class QAndA extends InteractiveConsoleCommand
     public function handle()
     {
         while ($this->running) {
-
             $this->showMenu();
 
             $choice = strtolower(
