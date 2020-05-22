@@ -8,8 +8,8 @@
 ## Installation
 - Clone the repository.
 - Run `make init` to create local dotEnv files `.env` and `.docker.mysql.env` need to setup local dev environment.
-- `make all` will bring the containers up and run `composer install`
 - Edit `.docker.mysql.env` to set mysql credentials
+- `make all` will bring the containers up and run `composer install`
 
 ## Usage
 - `make qanda-interactive` to run Q and A cli command
