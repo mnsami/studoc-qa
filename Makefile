@@ -16,10 +16,15 @@ ifeq ($(COMPOSE_PROJECT_NAME), )
 endif
 
 help:
-	@ echo "Makefile for project.\n"
-	@ echo "Usage: make <target>\n"
-	@ echo "Available targets:\n"
-	@ cat Makefile | grep -oE "^[^: ]+:" | grep -oE "[^:]+" | grep -Ev "help|default|.PHONY"
+	@echo "Makefile for project.\n"
+	@echo "Usage: make <target>\n"
+	@echo "Available targets:\n"
+	@cat Makefile | grep -oE "^[^: ]+:" | grep -oE "[^:]+" | grep -Ev "help|default|.PHONY"
+
+init:
+	@echo "\n==> Coping dotEnv files..."
+	cp .env.example .env
+	cp .docker.mysql.env.sample .docker.mysql.env
 
 all: container-up lint-composer lint-php lint-eol composer-install phpcs
 
@@ -69,4 +74,12 @@ composer-install:
 	@echo "\n==> Running composer install, runner $(RUNNER)"
 	$(CMD) $(COMPOSER) install
 
-.PHONY: container-up container-stop container-down tear-down all composer-install lint lint-eol lint-composer lint-php phpcs phpcbf tests coverage
+qanda-interactive:
+	@echo "\n==> Running interactive Q and A cli command"
+	$(CMD) $(PHP_CMD) artisan qanda:interactive
+
+qanda-reset:
+	@echo "\n==> Resetting answers database"
+	$(CMD) $(PHP_CMD) artisan qanda:reset
+
+.PHONY: container-up container-stop container-down tear-down all composer-install lint lint-eol lint-composer lint-php phpcs phpcbf qanda-interactive qanda-reset
