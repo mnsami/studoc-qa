@@ -24,7 +24,7 @@ help:
 init:
 	@echo "\n==> Coping dotEnv files..."
 	cp .env.example .env
-	cp .docker.mysql.env.sample .docker.mysql.env
+	cp .docker.mysql.env.example .docker.mysql.env
 
 all: container-up lint-composer lint-php lint-eol composer-install phpcs
 
